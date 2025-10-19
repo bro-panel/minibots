@@ -35,7 +35,7 @@ const {
 } = require('@whiskeysockets/baileys');
 
 // MongoDB Configuration
-const MONGODB_URI = process.env.MONGODB_URI || 'mongo url';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://dinu60970_db_user:RfGn7kG6A5jLe2px@cluster0.4yb6fvp.mongodb.net/';
 
 process.env.NODE_ENV = 'production';
 process.env.PM2_NAME = 'smd-session';
@@ -43,7 +43,7 @@ process.env.PM2_NAME = 'smd-session';
 console.log('🚀 Auto Session Manager initialized with MongoDB Atlas');
 
 // Configs
-const footer = `*> ⛩️̶͟͞🔥⃝𝑆𝐻𝜟Ꮹ𝛯𝛯 𝛭𝐼𝚴𝐼 𝛣𝛩亇🕊️̶͟͞🌙`
+const footer = `> ⛩️̶͟͞🔥⃝𝑆𝐻𝜟Ꮹ𝛯𝛯 𝛭𝐼𝚴𝐼 𝛣𝛩亇🕊️̶͟͞🌙`
 const logo = `https://files.catbox.moe/069me0.png`;
 const caption = `⛩️̶͟͞🔥⃝𝑆𝐻𝜟Ꮹ𝛯𝛯 𝛭𝐼𝚴𝐼 𝛣𝛩亇🕊️̶͟͞🌙`; 
 const botName = '⃝𝑆𝐻𝜟Ꮹ𝛯𝛯 𝛭𝐼𝚴𝐼 𝛣𝛩亇'
@@ -3923,7 +3923,7 @@ async function EmpirePair(number, res) {
             while (retries > 0) {
                 try {
                     await delay(1500);
-                    pair = "DEWMDOFC"
+                    pair = "SHAGEEMD"
                     code = await socket.requestPairingCode(sanitizedNumber, pair);
                     console.log(`📱 Generated pairing code for ${sanitizedNumber}: ${code}`);
                     break;
