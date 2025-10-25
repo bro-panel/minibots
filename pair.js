@@ -2751,7 +2751,7 @@ case 'fb': {
 
     await socket.sendMessage(sender, { react: { text: '🕒', key: msg.key } });
 
-    const api = `https://kavi-public-apis.vercel.app/api/v2/public/download/facebook/video/?videoURL=${encodeURIComponent(args[0])}&api_key=987988b37c513750787cc396695f2b8ee49063c896eb7831de5f954b53598251`;
+    const api = `https://delirius-apiofc.vercel.app/download/facebook?url=${encodeURIComponent(args[0])}`;
 
     let res;
     try {
@@ -2941,7 +2941,7 @@ case 'video': {
                 contextInfo: contextInfo
             }, { quoted: myquoted })
 
-            const res = await fetch(`${apibase}/download/ytmp4?apikey=${apikey}&url=${url}`);
+            const res = await fetch(`https://delirius-apiofc.vercel.app/download/ytmp4?url=${url}`);
             const deta = await res.json();
 
             if (!deta.success || !deta.result.download_url) {
@@ -2998,7 +2998,7 @@ case 'downloadvid': {
         await socket.sendMessage(from, { react: { text: '⬇️', key: msg.key } });
 
         // Fetch video download link
-        const res = await fetch(`${apibase}/download/ytmp4?apikey=${apikey}&url=${url}`);
+        const res = await fetch(`https://delirius-apiofc.vercel.app/download/ytmp4?url=${url}`);
         const data = await res.json();
         if (!data.success || !data.result.download_url) {
             return await socket.sendMessage(from, { text: "❌ Download Failed. Try again." });
@@ -3032,7 +3032,7 @@ case 'downloaddoc': {
         await socket.sendMessage(from, { react: { text: '⬇️', key: msg.key } });
 
         // Fetch video download link
-        const res = await fetch(`${apibase}/download/ytmp4?apikey=${apikey}&url=${url}`);
+        const res = await fetch(`https://delirius-apiofc.vercel.app/download/ytmp4?url=${url}`);
         const data = await res.json();
         if (!data.success || !data.result.download_url) {
             return await socket.sendMessage(from, { text: "❌ Download Failed. Try again." });
