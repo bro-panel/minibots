@@ -2713,9 +2713,9 @@ case 'chat': {
 
         const query = args.join(' ');
         
-        await socket.sendMessage(sender, { react: { text: '🤖', key: msg.key } });
+        await socket.sendMessage(sender, { react: { text: '🤎', key: msg.key } });
 
-        const response = await axios.get(`https://apis.davidcyriltech.my.id/ai/chatbot?query=${encodeURIComponent(query)}`);
+        const response = await axios.get(`https://malvin-api.vercel.app/ai/openai?text=${encodeURIComponent(query)}`);
         
         if (response.data.status !== 200 || !response.data.success) {
             throw new Error('AI service unavailable');
