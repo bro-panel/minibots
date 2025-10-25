@@ -2739,7 +2739,7 @@ case 'facebook':
 case 'facebok':
 case 'fbdl':
 case 'fb': {
-    const { igdl } = require('ruhend-scraper');
+    const axios = require('axios');
     const userConfig = await loadUserConfig(number);                
     const useButton = userConfig.BUTTON === 'true'; // default false
 
@@ -2751,21 +2751,25 @@ case 'fb': {
 
     await socket.sendMessage(sender, { react: { text: '🕒', key: msg.key } });
 
+    const api = `https://kavi-public-apis.vercel.app/api/v2/public/download/facebook/video/?videoURL=${encodeURIComponent(args[0])}&api_key=987988b37c513750787cc396695f2b8ee49063c896eb7831de5f954b53598251`;
+
     let res;
     try {
-        res = await igdl(args[0]);
+        const { data } = await axios.get(api);
+        res = data;
     } catch (error) {
-        return socket.sendMessage(sender, { text: '❌ *Error obtaining data.*' }, { quoted: msg });
+        console.error(error);
+        return socket.sendMessage(sender, { text: '❌ *Error fetching video data.*' }, { quoted: msg });
     }
 
-    let result = res.data;
-    if (!result || result.length === 0) {
+    if (!res || !res.status || !res.data) {
         return socket.sendMessage(sender, { text: '❌ *No result found.*' }, { quoted: msg });
     }
 
-    let hd = result.find(i => i.resolution.includes("720p"));
-    let sd = result.find(i => i.resolution.includes("720p (HD)"));
-    let firstVideo = result[0];
+    const videoData = res.data;
+    const hd = videoData?.hd?.url;
+    const sd = videoData?.sd?.url;
+    const thumb = videoData?.thumbnail || videoData?.thumb || null;
 
     if (useButton) {
         // Button-based system
@@ -2783,8 +2787,8 @@ case 'fb': {
                                 {
                                     title: 'Available Downloads:',
                                     rows: [
-                                        ...(hd ? [{ title: '🎥 HD (1080p)', description: 'Download in HD quality', id: `${prefix}fb_dl ${hd.url} HD` }] : []),
-                                        ...(sd ? [{ title: '📽 SD (720p)', description: 'Download in SD quality', id: `${prefix}fb_dl ${sd.url} SD` }] : [])
+                                        ...(hd ? [{ title: '🎥 HD (1080p)', description: 'Download in HD quality', id: `${prefix}fb_dl ${hd} HD` }] : []),
+                                        ...(sd ? [{ title: '📽 SD (720p)', description: 'Download in SD quality', id: `${prefix}fb_dl ${sd} SD` }] : [])
                                     ]
                                 }
                             ]
@@ -2794,9 +2798,9 @@ case 'fb': {
             ],
             headerType: 1,
             viewOnce: true,
-            image: { url: firstVideo.thumbnail },
+            image: thumb ? { url: thumb } : undefined,
             caption: `🎬 *FB VIDEO DOWNLOADER*\n────────────────────\nChoose your preferred quality:`,
-            contextInfo: contextInfo
+            contextInfo
         }, { quoted: msg });
 
     } else {
@@ -2813,7 +2817,7 @@ ${footer}
 `;
 
         const menuMsg = await socket.sendMessage(sender, {
-            image: { url: firstVideo.thumbnail },
+            image: thumb ? { url: thumb } : undefined,
             caption: menu
         }, { quoted: msg });
 
@@ -2824,35 +2828,28 @@ ${footer}
 
             const selected = rMsg.message.extendedTextMessage.text.trim();
 
-            if (selected === '1' && hd) {
-                await socket.sendMessage(sender, { react: { text: '⬇️', key: msg.key } });
-                await socket.sendMessage(sender, {
-                    video: { url: hd.url },
-                    caption: `${footer}`,
-                    fileName: 'fb_hd.mp4',
-                    mimetype: 'video/mp4'
-                }, { quoted: msg });
-                await socket.sendMessage(sender, { react: { text: '✅', key: msg.key } });
-
-            } else if (selected === '2' && sd) {
-                await socket.sendMessage(sender, { react: { text: '⬇️', key: msg.key } });
-                await socket.sendMessage(sender, {
-                    video: { url: sd.url },
-                    caption: `${footer}`,
-                    fileName: 'fb_sd.mp4',
-                    mimetype: 'video/mp4'
-                }, { quoted: msg });
-                await socket.sendMessage(sender, { react: { text: '✅', key: msg.key } });
-
-            } else {
-                await socket.sendMessage(sender, { text: '❌ Invalid option. Please select 1 or 2.' }, { quoted: msg });
+            let chosen;
+            if (selected === '1' && hd) chosen = hd;
+            else if (selected === '2' && sd) chosen = sd;
+            else {
+                return socket.sendMessage(sender, { text: '❌ Invalid option. Please select 1 or 2.' }, { quoted: msg });
             }
+
+            await socket.sendMessage(sender, { react: { text: '⬇️', key: msg.key } });
+            await socket.sendMessage(sender, {
+                video: { url: chosen },
+                caption: `${footer}`,
+                fileName: `fb_${selected === '1' ? 'hd' : 'sd'}.mp4`,
+                mimetype: 'video/mp4'
+            }, { quoted: msg });
+            await socket.sendMessage(sender, { react: { text: '✅', key: msg.key } });
         });
     }
+
     break;
 }
 
-// Handler for button click
+// Button handler
 case 'fb_dl': {
     let url = args[0];
     let quality = args[1] || '';
@@ -2868,6 +2865,7 @@ case 'fb_dl': {
         }, { quoted: msg });
         await socket.sendMessage(sender, { react: { text: '✅', key: msg.key } });
     } catch (err) {
+        console.error(err);
         await socket.sendMessage(sender, { text: "*Error downloading video*" });
     }
     break;
