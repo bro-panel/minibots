@@ -47,9 +47,9 @@ const footer = `> ⛩️̶͟͞🔥⃝𝑆𝐻𝜟Ꮹ𝛯𝛯 𝛭𝐼𝚴𝐼 �
 const logo = `https://files.catbox.moe/069me0.png`;
 const caption = `⛩️̶͟͞🔥⃝𝑆𝐻𝜟Ꮹ𝛯𝛯 𝛭𝐼𝚴𝐼 𝛣𝛩亇🕊️̶͟͞🌙`; 
 const botName = '⃝𝑆𝐻𝜟Ꮹ𝛯𝛯 𝛭𝐼𝚴𝐼 𝛣𝛩亇'
-const mainSite = 'smd.nf';
-const apibase = 'https://foreign-marna-sithaunarathnapromax-9a005c2e.koyeb.app/api'
-const apikey = `7081a23a59a383052bf23930ac85613ce30b551547132046c3874edf7235c859`;
+const mainSite = 'shagee-md-free.nf';
+const apibase = 'https://kavi-public-apis.vercel.app'
+const apikey = `987988b37c513750787cc396695f2b8ee49063c896eb7831de5f954b53598251`;
 
 const config = {
     // General Bot Settings
