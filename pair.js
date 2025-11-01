@@ -2129,7 +2129,7 @@ case 'unfollowchannel': {
                     }, { quoted: msg });
                     break;
                 }
-
+/*
 // YouTube Music Downloader Command - Download Music from YouTube - Last Update 2025-August-14
 case 'play':
 case 'ytmp3':
@@ -2385,7 +2385,154 @@ case 'download_voice': {
     }
     break;
 }
+                    case 'song':
+case 'ytmusic':
+case 'ytaudio': {
+  if (!args[0]) {
+    return reply(`🎵 *Please send a YouTube video link!*\n\nExample:\n${prefix + command} https://youtu.be/dQw4w9WgXcQ`)
+  }
 
+  const link = args[0];
+  const valid = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\//i;
+  if (!valid.test(link)) return reply('❌ Invalid YouTube URL!');
+
+  try {
+    const axios = require('axios');
+    // 🔗 Kaviya API for YouTube MP3 download
+    const apiUrl = `https://kavi-public-apis.vercel.app/api/v2/public/download/youtube/audio?videoURL=${encodeURIComponent(link)}&api_key=987988b37c513750787cc396695f2b8ee49063c896eb7831de5f954b53598251`;
+
+    const res = await axios.get(apiUrl);
+    const data = res.data;
+
+    if (!data || !data.data || !data.data.download_url) {
+      return reply('⚠️ Could not fetch the song. Try another link!');
+    }
+
+    const title = data.data.title || 'Unknown Title';
+    const size = data.data.size || 'Unknown';
+    const audioUrl = data.data.download_url;
+
+    const caption = `🎶 *[ YOUTUBE SONG DOWNLOADER ]*\n🎧 Title: ${title}\n📦 Size: ${size}`;
+
+    await ptz.sendMessage(
+      m.chat,
+      {
+        audio: { url: audioUrl },
+        mimetype: 'audio/mpeg',
+        fileName: `${title}.mp3`,
+        caption
+      },
+      { quoted: m }
+    );
+
+  } catch (err) {
+    console.error(err);
+    reply('❌ Error downloading song. Please try again later.');
+  }
+}
+break;*/
+
+case 'song':
+case 'ytmusic':
+case 'ytaudio': {
+  if (!args[0]) {
+    return reply(`🎵 *Please send a YouTube video link!*\n\nExample:\n${prefix + command} https://youtu.be/dQw4w9WgXcQ`)
+  }
+
+  const link = args[0];
+  const valid = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\//i;
+  if (!valid.test(link)) return reply('❌ Invalid YouTube URL!');
+
+  try {
+    const axios = require('axios');
+    const apiUrl = `https://kavi-public-apis.vercel.app/api/v2/public/download/youtube/song/?videoURL=${encodeURIComponent(link)}&api_key=987988b37c513750787cc396695f2b8ee49063c896eb7831de5f954b53598251`;
+    
+    const res = await axios.get(apiUrl);
+    const data = res.data;
+
+    if (!data || !data.data || !data.data.download_url) {
+      return reply('⚠️ Failed to fetch song. Try another link!');
+    }
+
+    const title = data.data.title || 'Unknown Title';
+    const size = data.data.size || 'Unknown';
+    const audioUrl = data.data.download_url;
+    const thumbnail = data.data.thumbnail || null;
+
+    const caption = `🎶 *[ YOUTUBE SONG DOWNLOADER ]*\n🎧 Title: ${title}\n📦 Size: ${size}`;
+
+    // Send thumbnail + audio (if available)
+    if (thumbnail) {
+      await ptz.sendMessage(
+        m.chat,
+        { image: { url: thumbnail }, caption },
+        { quoted: m }
+      );
+    }
+
+    await ptz.sendMessage(
+      m.chat,
+      {
+        audio: { url: audioUrl },
+        mimetype: 'audio/mpeg',
+        fileName: `${title}.mp3`,
+      },
+      { quoted: m }
+    );
+
+  } catch (err) {
+    console.error(err);
+    reply('❌ Error downloading song. Please try again later.');
+  }
+}
+break;
+
+
+case 'fb':
+case 'facebook':
+case 'facebookvid': {
+  if (!args[0]) {
+    return reply(`📹 *Please send a Facebook video link!*\n\nExample:\n${prefix + command} https://fb.watch/...`)
+  }
+
+  const link = args[0];
+  const valid = /^(https?:\/\/)?(www\.)?(facebook\.com|fb\.watch)\//i;
+  if (!valid.test(link)) return reply('❌ Invalid Facebook URL!');
+
+  try {
+    const axios = require('axios');
+    // ✅ Using Kaviya API
+    const apiUrl = `https://kavi-public-apis.vercel.app/api/v2/public/download/facebook/video/?videoURL=${encodeURIComponent(link)}&api_key=987988b37c513750787cc396695f2b8ee49063c896eb7831de5f954b53598251`;
+
+    const res = await axios.get(apiUrl);
+    const data = res.data;
+
+    if (!data || !data.data || !data.data.download_url) {
+      return reply('⚠️ Could not fetch video. Try another link!');
+    }
+
+    const title = data.data.title || 'Facebook Video';
+    const quality = data.data.quality || 'Unknown';
+    const videoUrl = data.data.download_url;
+    const size = data.data.size || 'N/A';
+
+    const caption = `🎬 *[ FACEBOOK VIDEO DOWNLOADER ]*\n📄 Title: ${title}\n📺 Quality: ${quality}\n📦 Size: ${size}`;
+
+    await ptz.sendMessage(
+      m.chat,
+      { video: { url: videoUrl }, caption },
+      { quoted: m }
+    );
+
+  } catch (err) {
+    console.error(err);
+    reply('❌ Error downloading Facebook video. Please try again later.');
+  }
+}
+break;
+
+
+                    
                 case 'boom': {
                     if (args.length < 2) {
                         return await socket.sendMessage(sender, {
